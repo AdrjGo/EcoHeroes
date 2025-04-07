@@ -1,0 +1,103 @@
+services:
+  # PostgreSQL
+  db:
+    image: postgres:15
+    container_name: ecoheroes_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-ecoheroes}
+      POSTGRES_USER: ${DB_USERNAME:-ecoheroes}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USERNAME:-ecoheroes} -d ${DB_DATABASE:-ecoheroes}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecoheroes_network
+
+  # Laravel Backend
+  server:
+    build:
+      context: ./Server
+      dockerfile: Dockerfile
+    container_name: ecoheroes_server
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./Server:/var/www
+      - /var/www/vendor
+      - /var/www/node_modules
+      - ./Server/.env:/var/www/.env
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_KEY=${APP_KEY:-}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE:-ecoheroes}
+      - DB_USERNAME=${DB_USERNAME:-ecoheroes}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - ecoheroes_network
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "php artisan key:generate &&
+             php artisan migrate --force &&
+             php artisan serve --host=0.0.0.0 --port=8000"
+
+  # React Frontend (desarrollo)
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: development
+    container_name: ecoheroes_client
+    restart: unless-stopped
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.vite
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://server:8000/api
+    ports:
+      - "5173:5173"
+    networks:
+      - ecoheroes_network
+    depends_on:
+      - server
+    stdin_open: true
+    tty: true
+
+  # Frontend para producción (opcional)
+  client-prod:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: production
+    container_name: ecoheroes_client_prod
+    restart: unless-stopped
+    networks:
+      - ecoheroes_network
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:
+
+networks:
+  ecoheroes_network:
+    driver: bridge
