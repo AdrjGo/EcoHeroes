@@ -1,0 +1,239 @@
+.container {
+  width: 100%;
+}
+
+/* Hero Section */
+.heroSection {
+  background-color: #fff;
+  padding: 2rem;
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+.heroContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heroText {
+  flex: 1;
+  padding-right: 2rem;
+}
+
+.heroText h1 {
+  font-size: 3.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.heroText p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.actionButton {
+  padding: 0.8rem 2rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.actionButton:hover {
+  background-color: #388E3C;
+}
+
+.heroImage {
+  flex: 1;
+  text-align: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logoImage {
+  max-width: 100%;
+  height: auto;
+  width: 500px;
+  object-fit: contain;
+}
+
+/* EcoHéroe Section */
+.ecoHeroeSection {
+  background-color: #000;
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.ecoHeroeSection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.ecoHeroeSection p {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* Features Section */
+.featuresSection {
+  background-color: #000;
+  color: white;
+  padding: 4rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  text-align: center;
+}
+
+.featureIcon {
+  font-size: 3rem;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.featureCard h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.featureCard p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+/* Stats Section */
+.statsSection {
+  background-color: #fff;
+  padding: 4rem 2rem;
+}
+
+.statsContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4rem;
+}
+
+.statsLeft {
+  flex: 1;
+}
+
+.statsLeft h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.statsLeft p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.statsRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.statIcon {
+  font-size: 2rem;
+  color: #4CAF50;
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.statNumber {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.statLabel {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .heroText h1 {
+    font-size: 3rem;
+  }
+  
+  .statsContent {
+    padding: 0 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroContent {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .heroText {
+    padding-right: 0;
+    margin-bottom: 2rem;
+  }
+
+  .featuresSection {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .statsContent {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .statsRight {
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroText h1 {
+    font-size: 2rem;
+  }
+
+  .heroText p {
+    font-size: 1rem;
+  }
+
+  .statsLeft h2 {
+    font-size: 2rem;
+  }
+} 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Text Shadow -->
+  <text x="50" y="300" font-family="Arial Black" font-size="120" fill="#000" opacity="0.1" filter="blur(8px)">
+    EcoHeroes
+  </text>
+  
+  <!-- Main Text -->
+  <text x="50" y="300" font-family="Arial Black" font-size="120" fill="url(#greenGradient)">
+    EcoHeroes
+  </text>
+  
+  <!-- Decorative Elements -->
+  <path d="M600 200 C600 100, 700 150, 750 200" stroke="#4CAF50" stroke-width="4" fill="none"/>
+  <path d="M600 200 C600 300, 700 250, 750 200" stroke="#4CAF50" stroke-width="4" fill="none"/>
+  
+  <!-- Leaf Elements -->
+  <path d="M700 200 Q750 150, 700 100 Q650 150, 700 200" fill="#4CAF50" opacity="0.8"/>
+  <path d="M720 180 Q770 130, 720 80 Q670 130, 720 180" fill="#2E7D32" opacity="0.6"/>
+</svg> 

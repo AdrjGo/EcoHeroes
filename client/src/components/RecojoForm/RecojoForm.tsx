@@ -7,12 +7,14 @@ interface RecojoFormProps {
 }
 
 const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
-  const [formData, setFormData] = useState<RecojoFormData>({
+  const [formData, setFormData] = useState<RecojoFormData & { carnet: string; nombreCompleto: string }>({
     direccion: '',
     detallesCasa: '',
     tipoResiduo: 'orgánico',
     tamañoResiduo: 'pequeño',
-    referencia: ''
+    referencia: '',
+    carnet: '',
+    nombreCompleto: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,16 +23,56 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    if (name === 'carnet' || name === 'referencia') {
+      // Allow only numbers
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData({
+        ...formData,
+        [name]: numericValue
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   return (
     <div className={styles.formContainer}>
       <h2 className={styles.title}>SOLICITUD DE RECOJO</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label htmlFor="nombreCompleto">Nombre Completo:</label>
+          <input
+            type="text"
+            id="nombreCompleto"
+            name="nombreCompleto"
+            value={formData.nombreCompleto}
+            onChange={handleChange}
+            required
+            placeholder="Ej: Juan Pérez"
+            maxLength={50}
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="carnet">Carnet:</label>
+          <input
+            type="text"
+            id="carnet"
+            name="carnet"
+            value={formData.carnet}
+            onChange={handleChange}
+            required
+            placeholder="Ej: 12345678"
+            maxLength={15}
+            pattern="\d*"
+          />
+        </div>
+
         <div className={styles.formGroup}>
           <label htmlFor="direccion">Dirección:</label>
           <input
@@ -40,6 +82,8 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
             value={formData.direccion}
             onChange={handleChange}
             required
+            placeholder="Ej: Av. Los Álamos 123, Distrito"
+            maxLength={60}
           />
         </div>
 
@@ -52,6 +96,8 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
             value={formData.detallesCasa}
             onChange={handleChange}
             required
+            placeholder="Ej: Casa azul de 2 pisos, reja negra"
+            maxLength={100}
           />
         </div>
 
@@ -64,9 +110,9 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
             onChange={handleChange}
             required
           >
-            <option value="orgánico">Orgánico</option>
-            <option value="reciclable">Reciclable</option>
-            <option value="peligroso">Peligroso</option>
+            <option value="orgánico">Orgánico (restos de comida, plantas)</option>
+            <option value="reciclable">Reciclable (papel, plástico, vidrio)</option>
+            <option value="peligroso">Peligroso (químicos, baterías)</option>
           </select>
         </div>
 
@@ -79,9 +125,9 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
             onChange={handleChange}
             required
           >
-            <option value="pequeño">Pequeño (1-5 kg)</option>
-            <option value="mediano">Mediano (5-20 kg)</option>
-            <option value="grande">Grande (+20 kg)</option>
+            <option value="pequeño">Pequeño (1-5 kg) - Bolsa de basura regular</option>
+            <option value="mediano">Mediano (5-20 kg) - Varias bolsas</option>
+            <option value="grande">Grande (+20 kg) - Necesita transporte especial</option>
           </select>
         </div>
 
@@ -94,6 +140,8 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
             value={formData.referencia}
             onChange={handleChange}
             required
+            placeholder="Ej: 70707070"
+            maxLength={8}
           />
         </div>
 
