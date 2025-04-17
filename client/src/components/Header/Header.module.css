@@ -93,7 +93,20 @@
     }
   
     .nav {
+      display: none;
+    }
+  
+    .navOpen {
+      display: flex !important;
+      flex-direction: column;
       gap: 1rem;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: #3d3e40;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
   
     .logoText {
@@ -108,22 +121,49 @@
   @media (max-width: 480px) {
     .container {
       flex-direction: column;
-      gap: 1rem;
-      padding: 1rem;
-    }
-  
-    .nav {
-      flex-wrap: wrap;
-      justify-content: center;
+      align-items: center;
       gap: 0.5rem;
     }
   
-    .nav a {
-      font-size: 0.9rem;
-      padding: 0.25rem 0.5rem;
+    .logoContainer {
+      justify-content: center;
     }
   
     .logoImage {
       height: 30px;
+    }
+  
+    .logoText {
+      font-size: 1.2rem;
+      text-align: center;
+    }
+  
+    .hamburger {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Estilos para el botón de hamburguesa */
+  .hamburger {
+    display: none;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  /* Estilos para el menú de navegación en dispositivos móviles */
+  .navOpen {
+    display: flex;
+  }
+
+  @media (max-width: 768px) {
+    .hamburger {
+      display: block;
+    }
+
+    .nav {
+      display: none;
     }
   }

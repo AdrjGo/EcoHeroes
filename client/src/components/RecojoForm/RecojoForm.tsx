@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RecojoFormData } from '../../types/recojoTypes';
 import styles from './RecojoForm.module.css';
 
 interface RecojoFormProps {
   onSubmit: (data: RecojoFormData) => void;
+  address: string;
 }
 
-const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
+const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
   const [formData, setFormData] = useState<RecojoFormData & { carnet: string; nombreCompleto: string }>({
-    direccion: '',
+    direccion: address,
     detallesCasa: '',
     tipoResiduo: 'orgánico',
     tamañoResiduo: 'pequeño',
@@ -16,6 +17,10 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
     carnet: '',
     nombreCompleto: ''
   });
+
+  useEffect(() => {
+    setFormData((prevData) => ({ ...prevData, direccion: address }));
+  }, [address]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,9 +33,19 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
     if (name === 'carnet' || name === 'referencia') {
       // Allow only numbers
       const numericValue = value.replace(/[^0-9]/g, '');
+      if (name === 'referencia' && numericValue.length > 0 && !/^[67]/.test(numericValue)) {
+        return; // Do not update if the first digit is not 6 or 7
+      }
       setFormData({
         ...formData,
         [name]: numericValue
+      });
+    } else if (name === 'nombreCompleto') {
+      // Allow only letters
+      const letterValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+      setFormData({
+        ...formData,
+        [name]: letterValue
       });
     } else {
       setFormData({
@@ -110,9 +125,13 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit }) => {
             onChange={handleChange}
             required
           >
-            <option value="orgánico">Orgánico (restos de comida, plantas)</option>
-            <option value="reciclable">Reciclable (papel, plástico, vidrio)</option>
-            <option value="peligroso">Peligroso (químicos, baterías)</option>
+            <option value="peligroso">Residuos Peligrosos</option>
+            <option value="electrico">Residuos Eléctricos y Electrónicos</option>
+            <option value="vidrio">Vidrio</option>
+            <option value="metales">Metales</option>
+            <option value="papel">Papel y Cartón</option>
+            <option value="plasticos">Plásticos</option>
+            <option value="organico">Materia Orgánica</option>
           </select>
         </div>
 

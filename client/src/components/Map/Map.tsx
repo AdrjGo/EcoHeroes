@@ -23,13 +23,6 @@ const pickupLocationIcon = new L.Icon({
   className: styles.pickupIcon
 });
 
-// Componente para actualizar la vista del mapa
-function ChangeView({ center }: { center: [number, number] }) {
-  const map = useMap();
-  map.setView(center);
-  return null;
-}
-
 // Componente para manejar los clics en el mapa
 function MapClickHandler({ onLocationSelect }: { onLocationSelect: (latlng: [number, number]) => void }) {
   useMapEvents({
@@ -53,7 +46,7 @@ const Map: React.FC<MapProps> = ({ onLocationSelect }) => {
 
   useEffect(() => {
     if ('geolocation' in navigator) {
-      const watchId = navigator.geolocation.watchPosition(
+      navigator.geolocation.getCurrentPosition(
         (location) => {
           setCurrentPosition([location.coords.latitude, location.coords.longitude]);
           setAccuracy(location.coords.accuracy);
@@ -70,8 +63,6 @@ const Map: React.FC<MapProps> = ({ onLocationSelect }) => {
           maximumAge: 0
         }
       );
-
-      return () => navigator.geolocation.clearWatch(watchId);
     } else {
       setError('Tu navegador no soporta geolocalización');
       setLoading(false);
@@ -100,25 +91,11 @@ const Map: React.FC<MapProps> = ({ onLocationSelect }) => {
             Haz clic en el mapa para seleccionar el punto de recolección
           </div>
           <MapContainer center={currentPosition} zoom={15} className={styles.map}>
-            <ChangeView center={currentPosition} />
             <MapClickHandler onLocationSelect={handleLocationSelect} />
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             />
-            {/* Marcador de la ubicación actual */}
-            <Marker position={currentPosition} icon={currentLocationIcon}>
-              <Popup>
-                <div className={styles.popup}>
-                  <strong>Tu ubicación actual</strong>
-                  {accuracy && (
-                    <p className={styles.accuracy}>
-                      Precisión: ±{Math.round(accuracy)} metros
-                    </p>
-                  )}
-                </div>
-              </Popup>
-            </Marker>
             {/* Marcador del punto seleccionado */}
             {selectedPosition && (
               <Marker position={selectedPosition} icon={pickupLocationIcon}>
