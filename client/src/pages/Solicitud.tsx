@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Map from '../components/Map/Map';
 import RecojoForm from '../components/RecojoForm/RecojoForm';
 import { RecojoFormData } from '../types/recojoTypes';
-import styles from './Solicitud.module.css';
 
 interface Location {
   lat: number;
@@ -32,8 +31,8 @@ const SolicitudPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
+    <div className="flex-1 flex flex-col items-center p-8 bg-gray-100 min-h-0">
+      <div className="w-full max-w-[1200px] grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto min-h-0 items-start">
         <RecojoForm onSubmit={handleSubmit} address={address} />
         <Map onLocationSelect={handleLocationSelect} />
       </div>

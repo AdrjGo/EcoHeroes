@@ -7,9 +7,9 @@ type AppProps = {
 
 function App({ title }: AppProps) {
   return (
-    <div className="w-full min-w-full overflow-x-hidden">
+    <div className="min-h-screen w-screen overflow-x-hidden bg-gray-100">
       <Layout title={title}>
-        <main className="w-full min-w-full">
+        <main className="flex-1 w-full">
           <Outlet />
         </main>
       </Layout>

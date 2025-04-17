@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { RecojoFormData } from '../../types/recojoTypes';
-import styles from './RecojoForm.module.css';
 
 interface RecojoFormProps {
   onSubmit: (data: RecojoFormData) => void;
@@ -31,17 +30,15 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
     const { name, value } = e.target;
 
     if (name === 'carnet' || name === 'referencia') {
-      // Allow only numbers
       const numericValue = value.replace(/[^0-9]/g, '');
       if (name === 'referencia' && numericValue.length > 0 && !/^[67]/.test(numericValue)) {
-        return; // Do not update if the first digit is not 6 or 7
+        return;
       }
       setFormData({
         ...formData,
         [name]: numericValue
       });
     } else if (name === 'nombreCompleto') {
-      // Allow only letters
       const letterValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
       setFormData({
         ...formData,
@@ -56,11 +53,11 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
   };
 
   return (
-    <div className={styles.formContainer}>
-      <h2 className={styles.title}>SOLICITUD DE RECOJO</h2>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.formGroup}>
-          <label htmlFor="nombreCompleto">Nombre Completo:</label>
+    <div className="w-full max-w-[500px] mx-auto p-4">
+      <h2 className="text-black text-xl mb-6 uppercase text-left font-normal">SOLICITUD DE RECOJO</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="nombreCompleto" className="text-gray-700 text-sm font-normal">Nombre Completo:</label>
           <input
             type="text"
             id="nombreCompleto"
@@ -70,11 +67,12 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
             required
             placeholder="Ej: Juan Pérez"
             maxLength={50}
+            className="p-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-sm w-full text-gray-800 placeholder-gray-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="carnet">Carnet:</label>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="carnet" className="text-gray-700 text-sm font-normal">Carnet:</label>
           <input
             type="text"
             id="carnet"
@@ -85,11 +83,12 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
             placeholder="Ej: 12345678"
             maxLength={15}
             pattern="\d*"
+            className="p-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-sm w-full text-gray-800 placeholder-gray-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="direccion">Dirección:</label>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="direccion" className="text-gray-700 text-sm font-normal">Dirección:</label>
           <input
             type="text"
             id="direccion"
@@ -99,11 +98,12 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
             required
             placeholder="Ej: Av. Los Álamos 123, Distrito"
             maxLength={60}
+            className="p-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-sm w-full text-gray-800 placeholder-gray-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="detallesCasa">Detalles de la casa:</label>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="detallesCasa" className="text-gray-700 text-sm font-normal">Detalles de la casa:</label>
           <input
             type="text"
             id="detallesCasa"
@@ -113,17 +113,20 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
             required
             placeholder="Ej: Casa azul de 2 pisos, reja negra"
             maxLength={100}
+            className="p-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-sm w-full text-gray-800 placeholder-gray-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="tipoResiduo">Tipo de residuo:</label>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="tipoResiduo" className="text-gray-700 text-sm font-normal">Tipo de residuo:</label>
           <select
             id="tipoResiduo"
             name="tipoResiduo"
             value={formData.tipoResiduo}
             onChange={handleChange}
             required
+            className="p-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-sm w-full text-gray-800 appearance-none focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
+            style={{ backgroundImage: "url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%234A5568%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27/%3e%3c/svg%3e')", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em' }}
           >
             <option value="peligroso">Residuos Peligrosos</option>
             <option value="electrico">Residuos Eléctricos y Electrónicos</option>
@@ -135,14 +138,16 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
           </select>
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="tamañoResiduo">Tamaño de residuo:</label>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="tamañoResiduo" className="text-gray-700 text-sm font-normal">Tamaño de residuo:</label>
           <select
             id="tamañoResiduo"
             name="tamañoResiduo"
             value={formData.tamañoResiduo}
             onChange={handleChange}
             required
+            className="p-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-sm w-full text-gray-800 appearance-none focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
+            style={{ backgroundImage: "url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%234A5568%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27/%3e%3c/svg%3e')", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em' }}
           >
             <option value="pequeño">Pequeño (1-5 kg) - Bolsa de basura regular</option>
             <option value="mediano">Mediano (5-20 kg) - Varias bolsas</option>
@@ -150,8 +155,8 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
           </select>
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="referencia">Número de referencia:</label>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="referencia" className="text-gray-700 text-sm font-normal">Número de referencia:</label>
           <input
             type="text"
             id="referencia"
@@ -161,14 +166,18 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
             required
             placeholder="Ej: 70707070"
             maxLength={8}
+            className="p-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-sm w-full text-gray-800 placeholder-gray-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
           />
         </div>
 
-        <button type="submit" className={styles.submitButton}>
+        <button
+          type="submit"
+          className="!bg-green-500 text-white border-none py-2 px-6 rounded-xl cursor-pointer text-sm w-auto self-start mt-2 hover:bg-green-600 transition-colors"
+        >
           Enviar
         </button>
 
-        <p className={styles.helperText}>
+        <p className="text-gray-600 text-xs mt-2 leading-snug">
           Rellena todos los espacios<br />
           para enviar tu solicitud
         </p>
