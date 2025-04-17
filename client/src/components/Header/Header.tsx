@@ -1,20 +1,34 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import logo from '../../assets/logo-imagen.webp';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="bg-[#3d3e40] py-4 w-full sticky top-0 z-50 shadow-md">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
         
         {/* Botón Hamburguesa */}
-        <button className="bg-[#3d3e40] text-white text-2xl md:hidden" onClick={toggleMenu}>
+        <button className="bg-[#3d3e40] text-white text-2xl md:hidden" onClick={toggleMenu} aria-expanded={isMenuOpen} aria-label="Toggle menu">
           ☰
         </button>
 
@@ -25,7 +39,7 @@ export default function Header() {
         </Link>
 
         {/* Menú de navegación */}
-        <nav className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex ${isMenuOpen ? 'flex-col absolute top-full left-0 right-0 bg-[#3d3e40] p-4 shadow-md' : 'gap-8'} transition-all duration-300`}>
+        <nav ref={menuRef} className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex ${isMenuOpen ? 'flex-col absolute top-full left-0 right-0 bg-[#3d3e40] p-4 shadow-md' : 'gap-8'} transition-all duration-300`}>
           {[
             { path: '/', label: 'Inicio' },
             { path: '/solicitar-recojo', label: 'Solicitar Recojo' },
