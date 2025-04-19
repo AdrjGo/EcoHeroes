@@ -58,3 +58,11 @@ Route::patch('/solicitudes/{recolector_id}/estado', [\App\Http\Controllers\Solic
 
 
 Route::apiResource('puntuaciones', \App\Http\Controllers\PuntuacionController::class);
+
+
+
+
+//enum
+Route::get('/enums/tipos-residuo', [\App\Http\Controllers\EnumController::class, 'tiposResiduo']);
+Route::get('/enums/tamanos-residuo', [\App\Http\Controllers\EnumController::class, 'tamanosResiduo']);
+
