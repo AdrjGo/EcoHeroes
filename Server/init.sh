@@ -35,18 +35,26 @@ if [ ! -f "$ENV_FILE" ]; then
 
     echo "✅ Archivo .env generado correctamente."
 else
-    echo "ℹ️ Archivo .env ya existe, no se hará nadaA."
+    echo "ℹ️ Archivo .env ya existe, no se hará nada."
 fi
 
-echo "📦 Ejecutando composer install..."
+# Limpiar caché de composer
+echo "🧹 Limpiando caché de Composer..."
+composer clear-cache
+
+# Instalar dependencias base
+echo "📦 Instalando dependencias base..."
+rm -f composer.lock
 composer install --no-interaction --prefer-dist
+
+# Instalar Cloudinary
+echo "📦 Instalando Cloudinary..."
+composer require cloudinary/cloudinary_php --update-with-dependencies --no-interaction
 
 echo "🔑 Generando clave de aplicación..."
 php artisan key:generate 
 
 echo "🧱 Ejecutando migraciones..."
-# php artisan config:clear
-# php artisan cache:clear
 php artisan migrate:fresh --seed --force
 
 echo "🌐 Iniciando servidor Laravel..."

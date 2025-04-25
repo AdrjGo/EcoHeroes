@@ -13,6 +13,7 @@ class Recolector extends BaseModel
     protected $fillable = [
         'id',
         'nombre',
+        'foto',
         'apellido',
         'ci',
         'telefono',

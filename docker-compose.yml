@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5436:5432"
     healthcheck:
       test:
         [
@@ -46,6 +46,10 @@ services:
       - DB_DATABASE=${DB_DATABASE:-ecoheroes}
       - DB_USERNAME=${DB_USERNAME:-ecoheroes}
       - DB_PASSWORD=${DB_PASSWORD:-secretHeroes}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME:-}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY:-}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET:-}
+      - CLOUDINARY_URL=${CLOUDINARY_URL:-}
     depends_on:
       db:
         condition: service_healthy
