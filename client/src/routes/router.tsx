@@ -9,6 +9,7 @@ import RegisterPage from '../pages/Register';
 import AdminLayout from '../components/admin/AdminLayout';
 import Perfiles from '../pages/admin/Perfiles';
 import Rutas from '../pages/admin/Rutas';
+import SolicitudesAdmin from '../pages/admin/SolicitudesAdmin';
 
 export const router = createBrowserRouter([
   {
@@ -55,7 +56,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'solicitudes',
-        element: <div>Página de Solicitudes</div>,
+        element: <SolicitudesAdmin />,
       },
     ],
   },

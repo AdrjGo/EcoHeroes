@@ -26,8 +26,8 @@ class SolicitudController extends Controller
     // Métodos que requieren estar logueado
     $this->middleware('auth:sanctum')->only(['update']);
 
-    // Métodos que requieren ser admin o moderador
-    $this->middleware(['auth:sanctum', 'isAdminOrModerator'])->except(['store', 'show', 'listarPorUsuario','update']);
+    // Métodos que requieren ser admin o moderador ((solo para pruebas))
+    // $this->middleware(['auth:sanctum', 'isAdminOrModerator'])->except(['store', 'show', 'listarPorUsuario','update']);
 }
 
 
@@ -39,6 +39,7 @@ class SolicitudController extends Controller
     public function index()
     {
         $solicitudes = Solicitud::with(['usuario', 'recolector'])
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return response()->json([

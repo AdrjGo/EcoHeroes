@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Por ahora, simplemente redirigimos sin validación
-    navigate('/admin/perfiles');
+    setError('');
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', {
+        email,
+        password,
+      });
+      // Guarda el token en localStorage
+      localStorage.setItem('token', response.data.token);
+      // Redirige a la vista de solicitudes admin
+      navigate('/admin/solicitudes');
+    } catch (err: any) {
+      setError('Credenciales incorrectas o usuario no autorizado');
+    }
   };
 
   return (
@@ -57,6 +70,11 @@ const Login = () => {
                   placeholder="••••••••"
                 />
               </div>
+
+              {/* Mensaje de error */}
+              {error && (
+                <div className="text-red-500 text-sm font-semibold">{error}</div>
+              )}
 
               {/* Botón de Inicio de Sesión */}
               <div>

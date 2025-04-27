@@ -45,10 +45,12 @@ export const solicitudService = {
 
   async obtenerSolicitudes() {
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.get(`${API_URL}/solicitudes`, {
         headers: {
           'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
+          'X-Requested-With': 'XMLHttpRequest',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
       return response.data;
