@@ -4,11 +4,11 @@ import Sidebar from './Sidebar';
 
 const AdminLayout = () => {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row">
       <Sidebar />
       
       {/* Contenido Principal */}
-      <div className="ml-64 min-h-screen">
+      <div className="flex-1 min-h-screen ml-0 md:ml-64">
         {/* Header */}
         <header className="bg-white shadow-sm">
           <div className="px-6 py-4">

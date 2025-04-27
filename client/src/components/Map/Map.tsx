@@ -89,9 +89,7 @@ const Map: React.FC<MapProps> = ({ onLocationSelect }) => {
         </div>
       ) : (
         <>
-          <div className="absolute top-[-30px] left-0 w-full text-center text-green-700 text-sm z-10">
-            Haz clic en el mapa para seleccionar el punto de recolección
-          </div>
+
           <MapContainer 
             center={currentPosition} 
             zoom={15} 

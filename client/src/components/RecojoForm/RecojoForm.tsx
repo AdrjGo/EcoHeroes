@@ -112,6 +112,7 @@ const RecojoForm: React.FC<RecojoFormProps> = ({ onSubmit, address }) => {
             onChange={handleChange}
             required
             placeholder="Ej: Av. Los Álamos 123, Distrito"
+            readOnly
             maxLength={60}
             className="p-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-sm w-full text-gray-800 placeholder-gray-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
           />

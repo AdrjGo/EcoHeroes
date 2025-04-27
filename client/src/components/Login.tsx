@@ -12,13 +12,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:8000/api/login', {
-        email,
-        password,
-      });
-      // Guarda el token en localStorage
-      localStorage.setItem('token', response.data.token);
-      // Redirige a la vista de solicitudes admin
+      // Simular inicio de sesión exitoso
       navigate('/admin/solicitudes');
     } catch (err: any) {
       setError('Credenciales incorrectas o usuario no autorizado');

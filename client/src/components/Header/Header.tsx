@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import logo from '../../assets/logo-imagen.webp';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);

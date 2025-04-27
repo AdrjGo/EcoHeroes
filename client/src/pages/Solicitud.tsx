@@ -90,7 +90,14 @@ const SolicitudPage: React.FC = () => {
             </div>
           )}
         </div>
-        <Map onLocationSelect={handleLocationSelect} />
+        <div className="bg-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-green-200 mt-35">
+          <div className="relative">
+            <div className="absolute top-0 left-0 w-full text-center text-black text-lg z-10 mt-[-20px] bg-white px-4 py-2 rounded-t-lg border-b-2 border-green-200 font-bold">
+              Selecciona tu ubicación
+            </div>
+            <Map onLocationSelect={handleLocationSelect} />
+          </div>
+        </div>
       </div>
     </div>
   );

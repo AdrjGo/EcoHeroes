@@ -1,168 +1,31 @@
-import React, { useState, useCallback } from 'react';
-import { Calendar, dateFnsLocalizer, View, Components, EventWrapperProps, DateCellWrapperProps } from 'react-big-calendar';
+import React, { useState, useEffect } from 'react';
+import { Calendar, dateFnsLocalizer, View } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import Map from '../../components/Map/Map';
-
-// Estilos personalizados usando CSS en línea para asegurar que se apliquen
-const customStyles = {
-  calendar: {
-    backgroundColor: 'white',
-    padding: '1.5rem',
-    borderRadius: '1rem',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-    border: '2px solid #BBF7D0'
-  },
-  // Estilos base para celdas
-  baseCell: {
-    backgroundColor: 'white',
-    border: '1px solid #E5E7EB',
-    transition: 'all 0.2s',
-  },
-  // Barra de herramientas
-  toolbar: {
-    marginBottom: '1.5rem',
-    padding: '1rem',
-    backgroundColor: 'white',
-    borderRadius: '0.5rem',
-    border: '1px solid #BBF7D0',
-  },
-  toolbarButton: {
-    backgroundColor: 'white',
-    color: '#374151',
-    border: '2px solid #BBF7D0',
-    borderRadius: '0.5rem',
-    padding: '0.5rem 1rem',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    transition: 'all 0.2s',
-    margin: '0 0.25rem',
-    cursor: 'pointer',
-  },
-  toolbarButtonActive: {
-    backgroundColor: '#059669',
-    color: 'white',
-    border: '2px solid #059669',
-  },
-  // Eventos
-  event: {
-    backgroundColor: '#059669',
-    border: '1px solid #047857',
-    color: 'white',
-    borderRadius: '0.375rem',
-    padding: '0.5rem',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    transition: 'all 0.2s',
-    '&:hover': {
-      backgroundColor: '#047857',
-      transform: 'translateY(-1px)',
-    },
-  },
-  // Vista de mes
-  monthCell: {
-    backgroundColor: 'white',
-    transition: 'all 0.2s',
-    minHeight: '120px',
-    padding: '0.5rem',
-    position: 'relative' as const,
-    border: 'none'
-  },
-  monthHeader: {
-    backgroundColor: '#F0FDF4',
-    padding: '0.75rem',
-    color: '#374151',
-    fontWeight: '600',
-    fontSize: '0.875rem',
-    textTransform: 'uppercase' as const,
-    textAlign: 'center' as const,
-    borderBottom: 'none'
-  },
-  // Vista de semana y día
-  timeCell: {
-    backgroundColor: 'white',
-    border: '1px solid #E5E7EB',
-    transition: 'all 0.2s',
-    padding: '0.25rem',
-    borderBottom: '1px solid #E5E7EB',
-  },
-  timeGutter: {
-    backgroundColor: '#F0FDF4',
-    padding: '0.5rem',
-    textAlign: 'right' as const,
-    color: '#374151',
-    fontWeight: '500',
-    fontSize: '0.875rem',
-    borderRight: '2px solid #BBF7D0',
-  },
-  timeHeader: {
-    backgroundColor: '#F0FDF4',
-    padding: '0.75rem',
-    borderBottom: '2px solid #BBF7D0',
-    color: '#374151',
-    fontWeight: '600',
-    fontSize: '0.875rem',
-  },
-  // Vista de agenda
-  agendaCell: {
-    padding: '1rem',
-    borderBottom: '1px solid #E5E7EB',
-    color: '#374151',
-    fontSize: '0.875rem',
-  },
-  agendaHeader: {
-    backgroundColor: '#F0FDF4',
-    padding: '1rem',
-    fontWeight: '600',
-    color: '#374151',
-    borderBottom: '2px solid #BBF7D0',
-  },
-  // Elementos comunes
-  today: {
-    backgroundColor: '#F0FDF4',
-    border: '2px solid #059669',
-    borderRadius: '4px'
-  },
-  dateNumber: {
-    fontSize: '0.875rem',
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: '0.5rem',
-    width: '100%',
-    textAlign: 'center' as const
-  },
-  currentTimeIndicator: {
-    backgroundColor: '#DC2626',
-    height: '2px',
-    position: 'absolute' as const,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-  },
-};
+// import Map from '../../components/Map/Map';
+import { solicitudService } from '../../services/solicitudService';
+import { Marker, Popup, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
+import locationIcon from '../../assets/icons/location-marker.svg';
 
 const locales = {
   'es': es,
-}
+};
 
 const localizer = dateFnsLocalizer({
   format,
   parse,
-  startOfWeek: () => {
-    return 1; // Lunes
-  },
+  startOfWeek: () => 1,
   getDay: (date: Date) => {
     const day = getDay(date);
-    return day === 0 ? 6 : day - 1; // Convierte domingo (0) a 6 y resta 1 a los demás días
+    return day === 0 ? 6 : day - 1;
   },
   locales,
 });
 
+// Define the 'Evento' interface
 interface Evento {
   id: number;
   title: string;
@@ -174,197 +37,64 @@ interface Evento {
   };
 }
 
+interface Solicitud {
+  id: number;
+  nombre: string;
+  direccion_recojo: string;
+  latitud: string;
+  longitud: string;
+  numero_referencia: string;
+  tipo_residuo: string;
+}
+
+const pickupLocationIcon = new L.Icon({
+  iconUrl: locationIcon,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+  className: "opacity-90 filter hue-rotate-0"
+});
+
+function MapClickHandler({ onLocationSelect }: { onLocationSelect: ([lat, lng]: [number, number]) => void }) {
+  useMapEvents({
+    click: (e) => {
+      onLocationSelect([e.latlng.lat, e.latlng.lng]);
+    },
+  });
+  return null;
+}
+
 const Rutas = () => {
-  const [events, setEvents] = useState<Evento[]>([
-    {
-      id: 1,
-      title: 'Ruta de Recojo #1',
-      start: new Date(2024, 3, 20, 10, 0),
-      end: new Date(2024, 3, 20, 12, 0),
-      ubicacion: {
-        lat: 4.7109,
-        lng: -74.0721
-      }
-    },
-    {
-      id: 2,
-      title: 'Ruta de Recojo #2',
-      start: new Date(2024, 3, 21, 14, 0),
-      end: new Date(2024, 3, 21, 16, 0),
-      ubicacion: {
-        lat: 4.7209,
-        lng: -74.0821
-      }
-    },
-  ]);
-
+  const [events, setEvents] = useState<Evento[]>([]);
   const [view, setView] = useState<View>('month');
-  const [date, setDate] = useState(new Date()); // Usar la fecha actual
+  const [date, setDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState<Evento | null>(null);
+  const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
 
-  const handleNavigate = useCallback((newDate: Date) => {
-    setDate(newDate);
+  useEffect(() => {
+    const fetchSolicitudes = async () => {
+      try {
+        const res = await solicitudService.obtenerSolicitudes();
+        if (res.data && res.data.data) {
+          setSolicitudes(res.data.data);
+        }
+      } catch {
+        setSolicitudes([]);
+      }
+    };
+    fetchSolicitudes();
   }, []);
 
-  const handleViewChange = useCallback((newView: View) => {
-    setView(newView);
-  }, []);
-
-  const handleSelectEvent = useCallback((event: Evento) => {
-    setSelectedEvent(event);
-  }, []);
-
-  const handleLocationSelect = (location: { lat: number; lng: number }) => {
+  const handleLocationSelect = ([lat, lng]: [number, number]) => {
     if (selectedEvent) {
       setEvents(prevEvents => 
         prevEvents.map(event => 
           event.id === selectedEvent.id 
-            ? { ...event, ubicacion: location }
+            ? { ...event, ubicacion: { lat, lng } }
             : event
         )
       );
     }
-  };
-
-  const isToday = (date: Date) => {
-    const today = new Date();
-    return date.getDate() === today.getDate() &&
-           date.getMonth() === today.getMonth() &&
-           date.getFullYear() === today.getFullYear();
-  };
-
-  // Componentes personalizados tipados
-  const components: Components<Evento, object> = {
-    toolbar: (props: any) => (
-      <div style={customStyles.toolbar} className="flex justify-between items-center">
-        <div>
-          <button
-            onClick={() => props.onNavigate('PREV')}
-            style={customStyles.toolbarButton}
-          >
-            Anterior
-          </button>
-          <button
-            onClick={() => props.onNavigate('TODAY')}
-            style={{
-              ...customStyles.toolbarButton,
-              ...(isToday(props.date) ? customStyles.toolbarButtonActive : {})
-            }}
-          >
-            Hoy
-          </button>
-          <button
-            onClick={() => props.onNavigate('NEXT')}
-            style={customStyles.toolbarButton}
-          >
-            Siguiente
-          </button>
-        </div>
-        <span className="text-xl font-bold text-gray-800">
-          {props.label}
-        </span>
-        <div>
-          {['month', 'week', 'day', 'agenda'].map((viewOption: string) => (
-            <button
-              key={viewOption}
-              onClick={() => props.onView(viewOption as View)}
-              style={{
-                ...customStyles.toolbarButton,
-                ...(props.view === viewOption ? customStyles.toolbarButtonActive : {})
-              }}
-            >
-              {viewOption === 'month' ? 'Mes' :
-               viewOption === 'week' ? 'Semana' :
-               viewOption === 'day' ? 'Día' :
-               'Agenda'}
-            </button>
-          ))}
-        </div>
-      </div>
-    ),
-    eventWrapper: (props: EventWrapperProps<Evento>) => (
-      <div
-        style={{
-          ...customStyles.event,
-          width: '100%',
-          height: '100%'
-        }}
-      >
-        {props.event.title}
-      </div>
-    ),
-    timeSlotWrapper: ({ children }: { children?: React.ReactNode }) => (
-      <div style={customStyles.timeCell}>
-        {children}
-      </div>
-    ),
-    dateCellWrapper: (props: DateCellWrapperProps) => {
-      const isCurrentDay = format(props.value, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
-      return (
-        <div
-          style={{
-            ...customStyles.monthCell,
-            backgroundColor: isCurrentDay ? '#F0FDF4' : 'white',
-            position: 'relative',
-            height: '100%'
-          }}
-        >
-          {props.children}
-          {isCurrentDay && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '8px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '24px',
-                height: '24px',
-                backgroundColor: '#059669',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                zIndex: 1
-              }}
-            >
-              {props.value.getDate()}
-            </div>
-          )}
-        </div>
-      );
-    },
-    month: {
-      header: ({ date, label }: { date: Date; label: string }) => (
-        <div style={customStyles.monthHeader}>
-          {label}
-        </div>
-      ),
-      dateHeader: ({ date, label }: { date: Date; label: string }) => {
-        const isCurrentDay = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
-        if (isCurrentDay) {
-          return null; // No mostramos el número aquí si es el día actual
-        }
-        return (
-          <div style={customStyles.dateNumber}>
-            {label}
-          </div>
-        );
-      },
-      event: (props: { event: Evento }) => (
-        <div style={customStyles.event} title={props.event.title}>
-          {props.event.title}
-        </div>
-      )
-    },
-    timeGutterHeader: () => (
-      <div style={customStyles.timeHeader}>Hora</div>
-    ),
-    timeGutterWrapper: ({ children }: { children?: React.ReactNode }) => (
-      <div style={customStyles.timeGutter}>
-        {children}
-      </div>
-    ),
   };
 
   return (
@@ -502,43 +232,34 @@ const Rutas = () => {
                 font-weight: 500 !important;
                 color: #374151 !important;
               }
+              @media (max-width: 768px) {
+                .rbc-calendar {
+                  height: 60vh !important;
+                }
+                .rbc-toolbar {
+                  flex-direction: column !important;
+                  align-items: center !important;
+                }
+                .rbc-toolbar button {
+                  margin-bottom: 0.5rem !important;
+                }
+              }
             `}
           </style>
-          <Calendar
-            localizer={localizer}
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ 
-              height: '700px',
-              width: '100%'
-            }}
-            className="custom-calendar"
-            components={components}
-            culture="es"
-            view={view}
-            onView={handleViewChange}
-            date={date}
-            onNavigate={handleNavigate}
-            onSelectEvent={handleSelectEvent}
-            messages={{
-              next: "Siguiente",
-              previous: "Anterior",
-              today: "Hoy",
-              month: "Mes",
-              week: "Semana",
-              day: "Día",
-              agenda: "Agenda",
-              noEventsInRange: "No hay rutas programadas",
-              allDay: "Todo el día",
-              date: "Fecha",
-              time: "Hora",
-              event: "Ruta",
-              showMore: total => `+ Ver ${total} más`
-            }}
-            views={['month', 'week', 'day', 'agenda']}
-            defaultView="month"
-          />
+          <div style={{ height: '70vh', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '1rem' }}>
+            <Calendar
+              localizer={localizer}
+              events={events}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: '70vh', width: '100%' }}
+              view={view}
+              onView={setView}
+              date={date}
+              onNavigate={setDate}
+              onSelectEvent={(event) => setSelectedEvent(event)}
+            />
+          </div>
         </div>
 
         {/* Mapa y Detalles */}
@@ -547,7 +268,29 @@ const Rutas = () => {
             <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-green-200">
               Ubicación de Rutas
             </h2>
-            <Map onLocationSelect={handleLocationSelect} />
+            <MapContainer center={[-17.3935, -66.1570]} zoom={12} className="w-full h-full min-h-[500px] rounded-lg z-0">
+              <MapClickHandler onLocationSelect={handleLocationSelect} />
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              />
+              {solicitudes.map((solicitud) => (
+                <Marker
+                  key={solicitud.id}
+                  position={[parseFloat(solicitud.latitud), parseFloat(solicitud.longitud)]}
+                  icon={pickupLocationIcon}
+                >
+                  <Popup>
+                    <div>
+                      <strong>{solicitud.nombre}</strong>
+                      <p>{solicitud.direccion_recojo}</p>
+                      <p>Celular: {solicitud.numero_referencia}</p>
+                      <p>Tipo de residuo: {solicitud.tipo_residuo}</p>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
           </div>
           
           {selectedEvent && (
