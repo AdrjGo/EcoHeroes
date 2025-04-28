@@ -21,23 +21,23 @@ export const router = createBrowserRouter([
         element: <Inicio />,
       },
       {
-        path: 'login',
+        path: '/login',
         element: <LoginPage />,
       },
       {
-        path: 'registro',
+        path: '/registro',
         element: <RegisterPage />,
       },
       {
-        path: 'solicitar-recojo',
+        path: '/solicitar-recojo',
         element: <SolicitudPage />,
       },
       {
-        path: 'ecoheroes',
+        path: '/ecoheroes',
         element: <EcoHeroes />,
       },
       {
-        path: 'contacto',
+        path: '/contacto',
         element: <Contacto />,
       },
     ],
@@ -47,15 +47,15 @@ export const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       {
-        path: 'perfiles',
+        path: '/perfiles',
         element: <Perfiles />,
       },
       {
-        path: 'rutas',
+        path: '/rutas',
         element: <Rutas />,
       },
       {
-        path: 'solicitudes',
+        path: '/solicitudes',
         element: <SolicitudesAdmin />,
       },
     ],
