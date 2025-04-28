@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, dateFnsLocalizer, View } from 'react-big-calendar';
-import { format, parse, startOfWeek, getDay } from 'date-fns';
-import { es } from 'date-fns/locale';
+import React, { useState, useCallback } from 'react';
+import { Calendar, dateFnsLocalizer, View, Components, EventWrapperProps, DateCellWrapperProps } from 'react-big-calendar';
+import { format, parse, getDay } from 'date-fns';
+import {es} from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 // import Map from '../../components/Map/Map';
 import { solicitudService } from '../../services/solicitudService';

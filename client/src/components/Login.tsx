@@ -12,7 +12,13 @@ const Login = () => {
     e.preventDefault();
     setError('');
     try {
-      // Simular inicio de sesión exitoso
+      const response = await axios.post('https://backendecoherores-production.up.railway.app/api/login', {
+        email,
+        password,
+      });
+      // Guarda el token en localStorage
+      localStorage.setItem('token', response.data.token);
+      // Redirige a la vista de solicitudes admin
       navigate('/admin/solicitudes');
     } catch (err: any) {
       setError('Credenciales incorrectas o usuario no autorizado');

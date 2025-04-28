@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://localhost:8000/api'; // URL del servidor Laravel en Docker
+const API_URL = 'https://backendecoherores-production.up.railway.app/api'; // URL del servidor Laravel en Docker
 
 export interface SolicitudData {
   nombre: string;

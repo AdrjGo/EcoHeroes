@@ -15,7 +15,7 @@ COPY . .
 
 # Definir variables de entorno si es necesario
 ENV NODE_ENV=development
-ENV VITE_API_URL=http://localhost:8000/api
+ENV VITE_API_URL=https://backendecoherores-production.up.railway.app/api
 
 # Exponer el puerto que usará el servidor de desarrollo
 EXPOSE 5173
