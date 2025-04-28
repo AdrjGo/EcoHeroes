@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Calendar, dateFnsLocalizer, View, Components, EventWrapperProps, DateCellWrapperProps } from 'react-big-calendar';
 import { format, parse, getDay } from 'date-fns';
 import {es} from 'date-fns/locale';
